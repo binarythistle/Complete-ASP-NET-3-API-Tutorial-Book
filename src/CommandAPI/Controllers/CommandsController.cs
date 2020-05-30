@@ -6,6 +6,7 @@ using CommandAPI.Models;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CommandAPI.Controllers
 {
@@ -14,6 +15,7 @@ namespace CommandAPI.Controllers
     public class CommandsController : ControllerBase
     {
         
+        //Rand
 
         private readonly ICommandAPIRepo _repository;
         private readonly IMapper _mapper;
@@ -102,6 +104,7 @@ namespace CommandAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<CommandReadDto>>(commandItems));
         }
 
+        [Authorize]
         [HttpGet("{id}", Name = "GetCommandById")]
         public ActionResult<CommandReadDto> GetCommandById(int id)
         {
