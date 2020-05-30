@@ -17,15 +17,15 @@ namespace CommandAPI.Tests
     public class CommandsControllerTests : IDisposable
     {
         Mock<ICommandAPIRepo> mockRepo;
-        CommandsProfile myProfile;
+        CommandsProfile realProfile;
         MapperConfiguration configuration;
         IMapper mapper;
-        
+
         public CommandsControllerTests()
         {
             mockRepo = new Mock<ICommandAPIRepo>();
-            myProfile = new CommandsProfile();
-            configuration = new MapperConfiguration(cfg => cfg.AddProfile(myProfile));
+            realProfile = new CommandsProfile();
+            configuration = new MapperConfiguration(cfg => cfg.AddProfile(realProfile));
             mapper = new Mapper(configuration);
         }
 
@@ -34,8 +34,10 @@ namespace CommandAPI.Tests
             mockRepo = null;
             mapper = null;
             configuration = null;
-            myProfile = null;
+            realProfile = null;
         }
+
+    
 
         //**************************************************
         //*
@@ -57,11 +59,7 @@ namespace CommandAPI.Tests
             var result = controller.GetAllCommands();
 
             //Assert
-            var okResult = result.Result as OkObjectResult;
-
-            var commands = okResult.Value as List<CommandReadDto>;
-
-            Assert.Empty(commands);
+            Assert.IsType<OkObjectResult>(result.Result);
         }
 
         //TEST 1.2
@@ -132,7 +130,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(0)).Returns(()=>null);
+              repo.GetCommandById(0)).Returns(() => null);
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -149,7 +147,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -158,7 +156,6 @@ namespace CommandAPI.Tests
 
             //Assert
             Assert.IsType<OkObjectResult>(result.Result);
-            
         }
 
         //TEST 2.3
@@ -167,7 +164,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -190,12 +187,12 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
             //Act
-            var result = controller.CreateCommand(new CommandCreateDto{});
+            var result = controller.CreateCommand(new CommandCreateDto { });
 
             //Assert
             Assert.IsType<ActionResult<CommandReadDto>>(result);
@@ -207,12 +204,12 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
             //Act
-            var result = controller.CreateCommand(new CommandCreateDto{});
+            var result = controller.CreateCommand(new CommandCreateDto { });
 
             //Assert
             Assert.IsType<CreatedAtRouteResult>(result.Result);
@@ -231,12 +228,12 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
             //Act
-            var result = controller.UpdateCommand(1, new CommandUpdateDto{});
+            var result = controller.UpdateCommand(1, new CommandUpdateDto { });
 
             //Assert
             Assert.IsType<NoContentResult>(result);
@@ -249,16 +246,15 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(0)).Returns(()=>null);
+              repo.GetCommandById(0)).Returns(() => null);
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
             //Act
-            var result = controller.UpdateCommand(0, new CommandUpdateDto{});
+            var result = controller.UpdateCommand(0, new CommandUpdateDto { });
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
-
         }
 
 
@@ -268,25 +264,19 @@ namespace CommandAPI.Tests
         //*
         //**************************************************
 
-        //TEST 5.1
-        [Fact]
-        public void PartialCommandUpdate_Returns204NoContent_WhenValidPatchDocSubmitted()
-        {
-            
-        }
 
-        //TEST 5.2
+        //TEST 5.1
         [Fact]
         public void PartialCommandUpdate_Returns404NotFound_WhenNonExistentResourceIDSubmitted()
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(0)).Returns(()=>null);
+              repo.GetCommandById(0)).Returns(() => null);
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
             //Act
-            var result = controller.PartialCommandUpdate(0, new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<CommandUpdateDto>{});
+            var result = controller.PartialCommandUpdate(0, new Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<CommandUpdateDto> { });
 
             //Assert
             Assert.IsType<NotFoundResult>(result);
@@ -305,7 +295,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(1)).Returns(new Command{Id=1, HowTo="mock", Platform="Mock", CommandLine="Mock"});
+              repo.GetCommandById(1)).Returns(new Command { Id = 1, HowTo = "mock", Platform = "Mock", CommandLine = "Mock" });
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -322,7 +312,7 @@ namespace CommandAPI.Tests
         {
             //Arrange 
             mockRepo.Setup(repo =>
-              repo.GetCommandById(0)).Returns(()=>null);
+              repo.GetCommandById(0)).Returns(() => null);
 
             var controller = new CommandsController(mockRepo.Object, mapper);
 
@@ -338,6 +328,10 @@ namespace CommandAPI.Tests
         //Private Support Methods
         //*
         //**************************************************
+
+
+
+
         private List<Command> GetCommands(int num)
         {
             var commands = new List<Command>();
